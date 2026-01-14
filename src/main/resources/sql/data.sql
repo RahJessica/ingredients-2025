@@ -13,3 +13,13 @@ values (1, 'Laitue', 'VEGETABLE', 800.0, 1),
        (4, 'Chocolat ', 'OTHER', 3000.0, 4),
        (5, 'Beurre', 'DAIRY', 2500.0, 4);
 
+
+
+update dish
+set price = 2000.0
+where id = 1;
+
+update dish
+set price = 6000.0
+where id = 2;
+

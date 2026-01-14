@@ -10,7 +10,7 @@ public class DataRetriever {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(
                     """
-                            select dish.id as dish_id, dish.name as dish_name, dish_type
+                            select dish.id as dish_id, dish.name as dish_name, dish_type, dish.price as dish_price
                             from dish
                             where dish.id = ?;
                             """);
@@ -21,6 +21,8 @@ public class DataRetriever {
                 dish.setId(resultSet.getInt("dish_id"));
                 dish.setName(resultSet.getString("dish_name"));
                 dish.setDishType(DishTypeEnum.valueOf(resultSet.getString("dish_type")));
+                dish.setPrice(resultSet.getObject("dish_price") == null
+                        ? null : resultSet.getDouble("dish_price"));
                 dish.setIngredients(findIngredientByDishId(id));
                 return dish;
             }
@@ -33,8 +35,8 @@ public class DataRetriever {
 
     Dish saveDish(Dish toSave) {
         String upsertDishSql = """
-                    INSERT INTO dish (id, name, dish_type)
-                    VALUES (?, ?, ?::dish_type)
+                    INSERT INTO dish (id, price, name, dish_type)
+                    VALUES (?, ?, ?, ?::dish_type)
                     ON CONFLICT (id) DO UPDATE
                     SET name = EXCLUDED.name,
                         dish_type = EXCLUDED.dish_type
@@ -48,11 +50,15 @@ public class DataRetriever {
                 if (toSave.getId() != null) {
                     ps.setInt(1, toSave.getId());
                 } else {
-                    ps.setNull(1, Types.INTEGER);
+                    ps.setInt(1, getNextSerialValue(conn, "dish", "id"));
                 }
-                ps.setString(2, toSave.getName());
-                ps.setString(3, toSave.getDishType().name());
-
+                if (toSave.getPrice() != null) {
+                    ps.setDouble(2, toSave.getPrice());
+                } else {
+                    ps.setNull(2, Types.DOUBLE);
+                }
+                ps.setString(3, toSave.getName());
+                ps.setString(4, toSave.getDishType().name());
                 try (ResultSet rs = ps.executeQuery()) {
                     rs.next();
                     dishId = rs.getInt(1);

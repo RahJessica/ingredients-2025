@@ -18,3 +18,6 @@ create table ingredient
     category ingredient_category,
     id_dish  int references dish (id)
 );
+
+alter table dish
+    add column if not exists price numeric(10, 2);

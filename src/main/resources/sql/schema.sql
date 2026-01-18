@@ -1,6 +1,5 @@
 create type dish_type as enum ('STARTER', 'MAIN', 'DESSERT');
 
-
 create table dish
 (
     id        serial primary key,

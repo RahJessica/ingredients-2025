@@ -131,7 +131,7 @@ public class DataRetriever {
             throws SQLException {
         if (ingredients == null || ingredients.isEmpty()) {
             try (PreparedStatement ps = conn.prepareStatement(
-                    "DELETE FROM dish_ingredient WHERE dish_id = ?")) {
+                    "DELETE FROM dish_ingredient WHERE id_dish = ?")) {
                 ps.setInt(1, dishId);
                 ps.executeUpdate();
             }
@@ -140,7 +140,7 @@ public class DataRetriever {
 
         String baseSql = """
                     DELETE FROM dish_ingredient
-                    WHERE dish_id = ? AND ingredient_id NOT IN (%s)
+                    WHERE id_dish = ? AND id_ingredient NOT IN (%s)
                 """;
 
         String inClause = ingredients.stream()
@@ -167,16 +167,20 @@ public class DataRetriever {
         }
 
         String attachSql = """
-                    INSERT INTO dish_ingredient (dish_id, ingredient_id, quantity)
+                    INSERT INTO dish_ingredient (id_dish, id_ingredient, quantity_required)
                     VALUES (?, ?, ?)
-                    ON CONFLICT (dish_id, ingredient_id) DO NOTHING
+                    ON CONFLICT (id_dish, id_ingredient) DO NOTHING
                 """;
 
         try (PreparedStatement ps = conn.prepareStatement(attachSql)) {
             for (Ingredient ingredient : ingredients) {
                 ps.setInt(1, dishId);
                 ps.setInt(2, ingredient.getId());
-                ps.setDouble(3, ingredient.getQuantity());
+                if (ingredient.getQuantity() != null) {
+                    ps.setDouble(3, ingredient.getQuantity());
+                } else {
+                    ps.setNull(3, Types.DOUBLE);
+                }
                 ps.addBatch(); // Can be substitute ps.executeUpdate() but bad performance
             }
             ps.executeBatch();
@@ -191,9 +195,10 @@ public class DataRetriever {
             PreparedStatement preparedStatement = connection.prepareStatement(
                     """
                             select ingredient.id, ingredient.name, ingredient.price, ingredient.category, ingredient.required_quantity
-                            from ingredient join dish_ingredient 
-                            on dish_ingredient.id = ingredient.id
-                            where dish_ingredient.id = ?;
+                            from ingredient 
+                            JOIN dish_ingredient di
+                            ON di.id_ingredient = ingredient.id
+                            WHERE di.id_dish = ?;
                             """);
             preparedStatement.setInt(1, idDish);
             ResultSet resultSet = preparedStatement.executeQuery();

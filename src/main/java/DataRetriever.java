@@ -131,7 +131,7 @@ public class DataRetriever {
             throws SQLException {
         if (ingredients == null || ingredients.isEmpty()) {
             try (PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE ingredient SET id_dish = NULL WHERE id_dish = ?")) {
+                    "DELETE FROM dish_ingredient WHERE dish_id = ?")) {
                 ps.setInt(1, dishId);
                 ps.executeUpdate();
             }
@@ -139,9 +139,8 @@ public class DataRetriever {
         }
 
         String baseSql = """
-                    UPDATE ingredient
-                    SET id_dish = NULL
-                    WHERE id_dish = ? AND id NOT IN (%s)
+                    DELETE FROM dish_ingredient
+                    WHERE dish_id = ? AND ingredient_id NOT IN (%s)
                 """;
 
         String inClause = ingredients.stream()

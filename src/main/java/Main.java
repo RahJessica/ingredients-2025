@@ -5,7 +5,7 @@ public class Main {
         Dish dish = dataRetriever.findDishById(4
 
         );
-        System.out.println(dish);
+        System.out.println(dataRetriever.findDishById(4));
 
         // Log after changes
 //        dish.setIngredients(List.of(new Ingredient(1), new Ingredient(2)));

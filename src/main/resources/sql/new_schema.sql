@@ -19,3 +19,5 @@ CREATE TABLE dish_ingredient
             ON DELETE CASCADE
 );
 
+-- Normalisation des données : relation many to many
+ALTER TABLE ingredient DROP COLUMN id_dish;

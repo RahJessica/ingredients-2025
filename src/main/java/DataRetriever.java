@@ -168,15 +168,16 @@ public class DataRetriever {
         }
 
         String attachSql = """
-                    UPDATE ingredient
-                    SET id_dish = ?
-                    WHERE id = ?
+                    INSERT INTO dish_ingredient (dish_id, ingredient_id, quantity)
+                    VALUES (?, ?, ?)
+                    ON CONFLICT (dish_id, ingredient_id) DO NOTHING
                 """;
 
         try (PreparedStatement ps = conn.prepareStatement(attachSql)) {
             for (Ingredient ingredient : ingredients) {
                 ps.setInt(1, dishId);
                 ps.setInt(2, ingredient.getId());
+                ps.setDouble(3, ingredient.getQuantity());
                 ps.addBatch(); // Can be substitute ps.executeUpdate() but bad performance
             }
             ps.executeBatch();

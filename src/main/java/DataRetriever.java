@@ -39,8 +39,8 @@ public class DataRetriever {
                     VALUES (?, ?, ?, ?::dish_type)
                     ON CONFLICT (id) DO UPDATE
                     SET name = EXCLUDED.name,
-                        dish_type = EXCLUDED.dish_type
-                    RETURNING id
+                    dish_type = EXCLUDED.dish_type
+                    RETURNING id  -- retourne l'id de la ligne insérée ou updatée
                 """;
 
         try (Connection conn = new DBConnection().getConnection()) {

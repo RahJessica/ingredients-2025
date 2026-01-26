@@ -20,12 +20,22 @@ values (1, 1, 1, 0.20, 'KG'),
        (4, 4, 4, 0.30, 'KG'),
        (5, 4, 5, 0.20, 'KG');
 
+insert into stock_movement (id, id_ingredient, quantity, type, unit, creation_datetime)
+values (1, 1, 5.0, 'IN', 'KG', '2024-01-05 08:00'),
+        (2, 1, 0.2, 'IN', 'KG', '2024-01-05 08:00'),
+        (3, 2, 4.0, 'IN', 'KG', '2024-01-05 08:00'),
+        (4, 2, 0.15, 'IN', 'KG', '2024-01-05 08:00'),
+        (5, 3, 10.0, 'IN', 'KG', '2024-01-05 08:00'),
+        (6, 3, 1.0, 'IN', 'KG', '2024-01-05 08:00'),
+        (7, 4, 3.0, 'IN', 'KG', '2024-01-05 08:00'),
+        (8, 4, 0.3, 'IN', 'KG', '2024-01-05 08:00'),
+        (9, 5, 2.5, 'IN', 'KG', '2024-01-05 08:00'),
+        (10, 5, 0.2, 'IN', 'KG', '2024-01-05 08:00');
 
-update dish
-set price = 2000.0
+
+update dish set price = 2000.0
 where id = 1;
 
-update dish
-set price = 6000.0
+update dish set price = 6000.0
 where id = 2;
 

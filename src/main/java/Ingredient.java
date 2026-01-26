@@ -1,3 +1,4 @@
+import java.util.List;
 import java.util.Objects;
 
 public class Ingredient {
@@ -5,15 +6,14 @@ public class Ingredient {
     private String name;
     private CategoryEnum category;
     private Double price;
-    private Dish dish;
-    private Double quantity;
+    private List<StockMovement> stockMovementList;
 
-    public Double getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Double quantity) {
-        this.quantity = quantity;
+    public Ingredient(Integer id, String name, CategoryEnum category, Double price, List<StockMovement> stockMovementList) {
+        this.id = id;
+        this.name = name;
+        this.category = category;
+        this.price = price;
+        this.stockMovementList = stockMovementList;
     }
 
     public Ingredient() {
@@ -28,10 +28,6 @@ public class Ingredient {
         this.name = name;
         this.category = category;
         this.price = price;
-    }
-
-    public String getDishName() {
-        return dish == null ? null : dish.getName();
     }
 
     public Integer getId() {
@@ -66,24 +62,20 @@ public class Ingredient {
         this.price = price;
     }
 
-    public Dish getDish() {
-        return dish;
-    }
-
-    public void setDish(Dish dish) {
-        this.dish = dish;
+    public List<StockMovement> getStockMovementList() {
+        return stockMovementList;
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Ingredient that = (Ingredient) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && category == that.category && Objects.equals(price, that.price) && Objects.equals(dish, that.dish);
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && category == that.category && Objects.equals(price, that.price);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, category, price, dish);
+        return Objects.hash(id, name, category, price, stockMovementList);
     }
 
     @Override
@@ -93,8 +85,7 @@ public class Ingredient {
                 ", name='" + name + '\'' +
                 ", category=" + category +
                 ", price=" + price +
-                ", dishName=" + getDishName() +
-                ", quantity=" + quantity +
+                ", stockMovementList=" + stockMovementList +
                 '}';
     }
 }

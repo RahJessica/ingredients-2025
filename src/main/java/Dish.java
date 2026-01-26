@@ -16,7 +16,7 @@ public class Dish {
         this.price = price;
     }
 
-    public Double getDishCost() {
+    /* public Double getDishCost() {
         double totalPrice = 0;
         for (int i = 0; i < ingredients.size(); i++) {
             Double quantity = ingredients.get(i).getQuantity();
@@ -27,6 +27,8 @@ public class Dish {
         }
         return totalPrice;
     }
+    */
+
 
     public Dish() {
     }
@@ -68,13 +70,6 @@ public class Dish {
     }
 
     public void setIngredients(List<Ingredient> ingredients) {
-        if (ingredients == null) {
-            this.ingredients = null;
-            return;
-        }
-        for (int i = 0; i < ingredients.size(); i++) {
-            ingredients.get(i).setDish(this);
-        }
         this.ingredients = ingredients;
     }
 
@@ -101,10 +96,12 @@ public class Dish {
                 '}';
     }
 
-    public Double getGrossMargin() {
+    /* public Double getGrossMargin() {
         if (price == null) {
             throw new RuntimeException("Price is null");
         }
         return price - getDishCost();
     }
+    */
+
 }

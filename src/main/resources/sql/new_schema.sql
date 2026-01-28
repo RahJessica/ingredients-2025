@@ -32,5 +32,30 @@ CREATE TABLE stock_movement (
     ON DELETE CASCADE
 );
 
+CREATE TABLE "order" (
+     id SERIAL PRIMARY KEY,
+     reference VARCHAR(20) UNIQUE NOT NULL,
+     creation_datetime TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE dish_order (
+     id SERIAL PRIMARY KEY,
+     id_order INTEGER NOT NULL,
+     id_dish INTEGER NOT NULL,
+     quantity INTEGER NOT NULL CHECK (quantity > 0),
+
+     CONSTRAINT fk_dish_order_order
+          FOREIGN KEY (id_order)
+          REFERENCES "order"(id)
+          ON DELETE CASCADE,
+
+     CONSTRAINT fk_dish_order_dish
+        FOREIGN KEY (id_dish)
+        REFERENCES dish(id)
+        ON DELETE CASCADE,
+
+        CONSTRAINT uq_order_dish UNIQUE (id_order, id_dish)
+);
+
 -- Normalisation des données : relation many to many
 ALTER TABLE ingredient DROP COLUMN id_dish;

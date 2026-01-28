@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -279,6 +280,10 @@ public class DataRetriever {
         }
     }
 
+    public StockValue getStockValueAt(Instant t) {
+
+        throw new RuntimeException("Not implemented");
+    }
 
     private String getSerialSequenceName(Connection conn, String tableName, String columnName)
             throws SQLException {

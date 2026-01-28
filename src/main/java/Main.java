@@ -1,9 +1,12 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         // Log before changes
         DataRetriever dataRetriever = new DataRetriever();
         Dish dish = dataRetriever.findDishById(2);

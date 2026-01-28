@@ -35,7 +35,7 @@ public class Main {
         Ingredient savedLait = dataRetriever.saveIngredient(lait);
 
         Ingredient savedSalt = dataRetriever.saveIngredient(sel);
-        System.out.println(dataRetriever.saveIngredient(sel));
+        // System.out.println(dataRetriever.saveIngredient(sel));
 
         dish.setIngredients(List.of(savedOignons, savedPommeDeTerre, savedFarine, savedLait, savedSalt));
 
@@ -48,5 +48,9 @@ public class Main {
         // Ingredient creations
         //List<Ingredient> createdIngredients = dataRetriever.createIngredients(List.of(new Ingredient(null, "Fromage", CategoryEnum.DAIRY, 1200.0)));
         //System.out.println(createdIngredients);
+
+
+        // System.out.println(dataRetriever.findOrderByReference("ORD0001"));
+
     }
 }

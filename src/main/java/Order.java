@@ -15,6 +15,10 @@ public class Order {
         this.dishOrders = dishOrders;
     }
 
+    public Order() {
+    }
+
+
     public Integer getId() {
         return id;
     }
@@ -68,4 +72,5 @@ public class Order {
                 ", dishOrders=" + dishOrders +
                 '}';
     }
+
 }

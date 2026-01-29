@@ -54,8 +54,8 @@ public class Main {
         
         DataRetriever dr = new DataRetriever();
 
-        // Créer un plat existant (déjà en base)
-        /*Dish dish2 = dr.findDishById(6);
+        // Test : method saveOrder()
+        Dish dish2 = dr.findDishById(6);
 
         DishOrder dishOrder = new DishOrder();
         dishOrder.setDish(dish2);
@@ -65,12 +65,15 @@ public class Main {
         order.setReference("ORD0002");
         order.setCreationDateTime(Instant.now());
         order.setDishOrders(List.of(dishOrder));
-
         Order saved = dr.saveOrder(order);
-        */
-
-
         // System.out.println("Commande enregistrée avec ID = " + saved.getId());
-        System.out.println(dataRetriever.findOrderByReference("ORD0001"));
+
+        // Test : DELIVERED status cannot be modified
+        Order order = dataRetriever.findOrderByReference("ORD0002");
+        order.setReference("ORD0003");
+        System.out.println(dataRetriever.saveOrder(order));
+
+        // Test : method findOrderByReference()
+        // System.out.println(dataRetriever.findOrderByReference("ORD0001"));
     }
 }

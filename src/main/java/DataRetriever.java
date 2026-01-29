@@ -289,7 +289,7 @@
             DBConnection dbConnection = new DBConnection();
             try (Connection connection = dbConnection.getConnection()) {
                 PreparedStatement preparedStatement = connection.prepareStatement("""
-                        select id, reference, creation_datetime from "order" where reference like ?""");
+                        select id, reference, creation_datetime, type, status from "order" where reference like ?""");
                 preparedStatement.setString(1, reference);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 if (resultSet.next()) {
@@ -336,6 +336,11 @@
         }
 
         public Order saveOrder(Order orderToSave) {
+
+            if (orderToSave.getStatus() == OrderStatusEnum.DELIVERED) {
+                throw new RuntimeException("A delivered order cannot be modified");
+            }
+
             try (Connection conn = new DBConnection().getConnection()) {
                 conn.setAutoCommit(false);
 

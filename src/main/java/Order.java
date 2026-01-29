@@ -7,6 +7,8 @@ public class Order {
     private String reference;
     private Instant creationDateTime;
     private List<DishOrder> dishOrders;
+    private OrderTypeEnum type;
+    private OrderStatusEnum status;
 
     public Order(Integer id, String reference, Instant creationDateTime, List<DishOrder> dishOrders) {
         this.id = id;
@@ -18,6 +20,31 @@ public class Order {
     public Order() {
     }
 
+
+    public Order(Integer id, String reference, Instant creationDateTime, List<DishOrder> dishOrders, OrderTypeEnum type, OrderStatusEnum status) {
+        this.id = id;
+        this.reference = reference;
+        this.creationDateTime = creationDateTime;
+        this.dishOrders = dishOrders;
+        this.type = type;
+        this.status = status;
+    }
+
+    public OrderTypeEnum getType() {
+        return type;
+    }
+
+    public void setType(OrderTypeEnum type) {
+        this.type = type;
+    }
+
+    public OrderStatusEnum getStatus() {
+        return status;
+    }
+
+    public void setStatus(OrderStatusEnum status) {
+        this.status = status;
+    }
 
     public Integer getId() {
         return id;

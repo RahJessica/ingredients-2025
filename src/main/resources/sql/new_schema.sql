@@ -1,5 +1,7 @@
 CREATE TYPE unit_type AS ENUM ('PCS', 'KG', 'L');
 CREATE TYPE movement_type AS ENUM ('IN', 'OUT');
+CREATE TYPE order_type AS ENUM ('EAT_IN', 'TAKE_AWAY');
+CREATE TYPE order_status AS ENUM ('CREATED', 'READY', 'DELIVERED');
 
 CREATE TABLE dish_ingredient
 (
@@ -56,6 +58,11 @@ CREATE TABLE dish_order (
 
         CONSTRAINT uq_order_dish UNIQUE (id_order, id_dish)
 );
+
+ALTER TABLE "order"
+    ADD COLUMN type order_type NOT NULL DEFAULT 'EAT_IN',
+ADD COLUMN status order_status NOT NULL DEFAULT 'CREATED';
+
 
 -- Normalisation des données : relation many to many
 ALTER TABLE ingredient DROP COLUMN id_dish;

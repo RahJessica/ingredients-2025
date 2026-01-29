@@ -51,6 +51,23 @@ public class Main {
 
 
         // System.out.println(dataRetriever.findOrderByReference("ORD0001"));
+        
+        DataRetriever dr = new DataRetriever();
 
+        // Créer un plat existant (déjà en base)
+        Dish dish2 = dr.findDishById(6);
+
+        DishOrder dishOrder = new DishOrder();
+        dishOrder.setDish(dish2);
+        dishOrder.setQuantity(1);
+
+        Order order = new Order();
+        order.setReference("ORD0002");
+        order.setCreationDateTime(Instant.now());
+        order.setDishOrders(List.of(dishOrder));
+
+        Order saved = dr.saveOrder(order);
+
+        System.out.println("Commande enregistrée avec ID = " + saved.getId());
     }
 }

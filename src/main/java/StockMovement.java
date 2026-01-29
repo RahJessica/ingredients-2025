@@ -14,6 +14,10 @@ public class StockMovement {
         this.creationDatetime = creationDatetime;
     }
 
+    public StockMovement() {
+
+    }
+
     public int getId() {
         return id;
     }
@@ -28,6 +32,22 @@ public class StockMovement {
 
     public Instant getCreationDatetime() {
         return creationDatetime;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setValue(StockValue value) {
+        this.value = value;
+    }
+
+    public void setType(MovementTypeEnum type) {
+        this.type = type;
+    }
+
+    public void setCreationDatetime(Instant creationDatetime) {
+        this.creationDatetime = creationDatetime;
     }
 
     @Override

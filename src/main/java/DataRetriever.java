@@ -299,6 +299,8 @@
                     order.setReference(resultSet.getString("reference"));
                     order.setCreationDateTime(resultSet.getTimestamp("creation_datetime").toInstant());
                     order.setDishOrders(findDishOrderByIdOrder(idOrder));
+                    order.setType(OrderTypeEnum.valueOf(resultSet.getString("type")));
+                    order.setStatus(OrderStatusEnum.valueOf(resultSet.getString("status")));
                     return order;
                 }
                 throw new RuntimeException("Order not found with reference " + reference);
@@ -389,11 +391,15 @@
                 }
 
                 PreparedStatement psOrder = conn.prepareStatement("""
-            INSERT INTO "order"(reference, creation_datetime)
-            VALUES (?, ?) RETURNING id
+            INSERT INTO "order"(reference, creation_datetime, type, status)
+            VALUES (?, ?, ?::order_type, ?::order_status)
+            RETURNING id
         """);
                 psOrder.setString(1, orderToSave.getReference());
                 psOrder.setTimestamp(2, Timestamp.from(orderToSave.getCreationDateTime()));
+                psOrder.setString(3, orderToSave.getType().name());
+                psOrder.setString(4, orderToSave.getStatus().name());
+
                 ResultSet rsOrder = psOrder.executeQuery();
                 rsOrder.next();
                 int orderId = rsOrder.getInt(1);

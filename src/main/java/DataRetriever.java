@@ -3,6 +3,7 @@
     import java.util.ArrayList;
     import java.util.List;
     import java.util.stream.Collectors;
+    import java.util.stream.DoubleStream;
 
     public class DataRetriever {
         Dish findDishById(Integer id) {
@@ -280,11 +281,6 @@
             }
         }
 
-        public StockValue getStockValueAt(Instant t) {
-
-            throw new RuntimeException("Not implemented");
-        }
-
         Order findOrderByReference(String reference) {
             DBConnection dbConnection = new DBConnection();
             try (Connection connection = dbConnection.getConnection()) {
@@ -337,12 +333,30 @@
 
         public Order saveOrder(Order orderToSave) {
 
-            if (orderToSave.getStatus() == OrderStatusEnum.DELIVERED) {
+            if (orderToSave.getId() != null && orderToSave.getStatus() == OrderStatusEnum.DELIVERED) {
                 throw new RuntimeException("A delivered order cannot be modified");
             }
 
             try (Connection conn = new DBConnection().getConnection()) {
                 conn.setAutoCommit(false);
+
+                if (orderToSave.getId() != null) {
+
+                    PreparedStatement psUpdate = conn.prepareStatement("""
+                UPDATE "order"
+                SET type = ?::order_type,
+                    status = ?::order_status
+                WHERE id = ?
+            """);
+
+                    psUpdate.setString(1, orderToSave.getType().name());
+                    psUpdate.setString(2, orderToSave.getStatus().name());
+                    psUpdate.setInt(3, orderToSave.getId());
+
+                    psUpdate.executeUpdate();
+                    conn.commit();
+                    return orderToSave;
+                }
 
                 for (DishOrder dishOrder : orderToSave.getDishOrders()) {
                     int dishId = dishOrder.getDish().getId();

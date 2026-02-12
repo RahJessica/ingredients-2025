@@ -3,12 +3,13 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws SQLException {
         // Log before changes
-        DataRetriever dataRetriever = new DataRetriever();
+        /* DataRetriever dataRetriever = new DataRetriever();
         Dish dish = dataRetriever.findDishById(2);
 
         Ingredient carottes = new Ingredient(8, "Carotte", CategoryEnum.VEGETABLE, 100.0 );
@@ -49,9 +50,6 @@ public class Main {
         //List<Ingredient> createdIngredients = dataRetriever.createIngredients(List.of(new Ingredient(null, "Fromage", CategoryEnum.DAIRY, 1200.0)));
         //System.out.println(createdIngredients);
 
-
-        // System.out.println(dataRetriever.findOrderByReference("ORD0001"));
-        
         DataRetriever dr = new DataRetriever();
 
         // Test : method saveOrder()
@@ -66,14 +64,44 @@ public class Main {
         order.setCreationDateTime(Instant.now());
         order.setDishOrders(List.of(dishOrder));
         Order saved = dr.saveOrder(order);
-        // System.out.println("Commande enregistrée avec ID = " + saved.getId());
+        System.out.println("Commande enregistrée avec ID = " + saved.getId());
+
+*/
 
         // Test : DELIVERED status cannot be modified
-        Order order = dataRetriever.findOrderByReference("ORD0002");
-        order.setReference("ORD0003");
-        System.out.println(dataRetriever.saveOrder(order));
+        DataRetriever dataRetriever = new DataRetriever();
+        Order order1 = dataRetriever.findOrderByReference("ORD102");
+        order1.setType(OrderTypeEnum.TAKE_AWAY);
+        // System.out.println(dataRetriever.saveOrder(order1));
+        // System.out.println(dataRetriever.saveOrder(order1));
 
         // Test : method findOrderByReference()
         // System.out.println(dataRetriever.findOrderByReference("ORD0001"));
+
+
+        Instant now = Instant.now();
+        StockMovement movement1 = new StockMovement(
+                1,
+                new StockValue(10.0, UnitEnum.KG),
+                MovementTypeEnum.IN,
+                now.minusSeconds(3600)
+        );
+
+        StockMovement movement2 = new StockMovement(
+                2,
+                new StockValue(5.0, UnitEnum.KG),
+                MovementTypeEnum.IN,
+                now.minusSeconds(1800)
+        );
+
+        Ingredient ingredient = new Ingredient(
+                1,
+                "Farine",
+                CategoryEnum.OTHER,
+                2000.0,
+                Arrays.asList(movement1, movement2)
+        );
+
+        System.out.println(ingredient.getStockValueAt(now));
     }
 }

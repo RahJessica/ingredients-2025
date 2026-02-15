@@ -79,6 +79,7 @@ public class Main {
         // System.out.println(dataRetriever.findOrderByReference("ORD0001"));
 
 
+        DataRetriever dr = new DataRetriever();
         Instant now = Instant.now();
         StockMovement movement1 = new StockMovement(
                 1,
@@ -102,6 +103,27 @@ public class Main {
                 Arrays.asList(movement1, movement2)
         );
 
-        System.out.println(ingredient.getStockValueAt(now));
+        Dish dish = dataRetriever.findDishById(6);
+        // System.out.println(dish.getDishCost());
+
+        Ingredient testIngredient = new Ingredient(
+                null,
+                "TestFarine",
+                CategoryEnum.OTHER,
+                100.0,
+                Arrays.asList(
+                        new StockMovement(0, new StockValue(10.0, UnitEnum.KG), MovementTypeEnum.IN, now.minusSeconds(3600)),
+                        new StockMovement(0, new StockValue(3.0, UnitEnum.KG), MovementTypeEnum.OUT, now.minusSeconds(1800))
+                )
+        );
+
+        StockValue javaStock = testIngredient.getStockValueAt(now);
+
+        System.out.println("Stock testIngredient = " + javaStock.getQuantity() + " " + javaStock.getUnit());
+
+        StockValue dbStock = dr.getStockValueAt(now, 2);
+
+        System.out.println("Stock calculé côté DB = " + dbStock.getQuantity() + " " + dbStock.getUnit());
+
     }
 }

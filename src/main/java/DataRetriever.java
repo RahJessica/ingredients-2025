@@ -2,6 +2,7 @@
     import java.time.Instant;
     import java.util.ArrayList;
     import java.util.List;
+    import java.util.Map;
     import java.util.stream.Collectors;
     import java.util.stream.DoubleStream;
 
@@ -36,13 +37,14 @@
 
         Dish saveDish(Dish toSave) {
             String upsertDishSql = """
-                        INSERT INTO dish (id, price, name, dish_type)
-                        VALUES (?, ?, ?, ?::dish_type)
-                        ON CONFLICT (id) DO UPDATE
-                        SET name = EXCLUDED.name,
-                        dish_type = EXCLUDED.dish_type
-                        RETURNING id  -- retourne l'id de la ligne insérée ou updatée
-                    """;
+                    INSERT INTO dish (id, selling_price, name, dish_type)
+                    VALUES (?, ?, ?, ?::dish_type)
+                    ON CONFLICT (id) DO UPDATE
+                    SET name = EXCLUDED.name,
+                        dish_type = EXCLUDED.dish_type,
+                        selling_price = EXCLUDED.selling_price
+                    RETURNING id
+                """;
 
             try (Connection conn = new DBConnection().getConnection()) {
                 conn.setAutoCommit(false);
@@ -66,9 +68,9 @@
                     }
                 }
 
-                List<Ingredient> newIngredients = toSave.getIngredients();
-                detachIngredients(conn, dishId, newIngredients);
-                attachIngredients(conn, dishId, newIngredients);
+                List<DishIngredient> newDishIngredients = toSave.getDishIngredients();
+                detachIngredients(conn, newDishIngredients);
+                attachIngredients(conn, newDishIngredients);
 
                 conn.commit();
                 return findDishById(dishId);
@@ -123,56 +125,38 @@
         }
 
 
-        private void detachIngredients(Connection conn, Integer dishId, List<Ingredient> ingredients)
-                throws SQLException {
-            if (ingredients == null || ingredients.isEmpty()) {
+        private void detachIngredients(Connection conn, List<DishIngredient> dishIngredients) {
+            Map<Integer, List<DishIngredient>> dishIngredientsGroupByDishId = dishIngredients.stream()
+                    .collect(Collectors.groupingBy(dishIngredient -> dishIngredient.getDish().getId()));
+            dishIngredientsGroupByDishId.forEach((dishId, dishIngredientList) -> {
                 try (PreparedStatement ps = conn.prepareStatement(
-                        "DELETE FROM dish_ingredient WHERE id_dish = ?")) {
+                        "DELETE FROM dish_ingredient where id_dish = ?")) {
                     ps.setInt(1, dishId);
-                    ps.executeUpdate();
+                    ps.executeUpdate(); // TODO: must be a grouped by batch
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
                 }
-                return;
-            }
-
-            String baseSql = """
-                        DELETE FROM dish_ingredient
-                        WHERE id_dish = ? AND id_ingredient NOT IN (%s)
-                    """;
-
-            String inClause = ingredients.stream()
-                    .map(i -> "?")
-                    .collect(Collectors.joining(","));
-
-            String sql = String.format(baseSql, inClause);
-
-            try (PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.setInt(1, dishId);
-                int index = 2;
-                for (Ingredient ingredient : ingredients) {
-                    ps.setInt(index++, ingredient.getId());
-                }
-                ps.executeUpdate();
-            }
+            });
         }
 
-        private void attachIngredients(Connection conn, Integer dishId, List<Ingredient> ingredients)
+        private void attachIngredients(Connection conn, List<DishIngredient> ingredients)
                 throws SQLException {
 
             if (ingredients == null || ingredients.isEmpty()) {
                 return;
             }
-
             String attachSql = """
-                        INSERT INTO dish_ingredient (id_dish, id_ingredient)
-                        VALUES (?, ?)
-                        ON CONFLICT (id_dish, id_ingredient) DO NOTHING
-                    """;
+                    insert into dish_ingredient (id, id_ingredient, id_dish, required_quantity, unit)
+                    values (?, ?, ?, ?, ?::unit)
+                """;
 
             try (PreparedStatement ps = conn.prepareStatement(attachSql)) {
-                for (Ingredient ingredient : ingredients) {
-                    ps.setInt(1, dishId);
-                    ps.setInt(2, ingredient.getId());
-
+                for (DishIngredient dishIngredient : ingredients) {
+                    ps.setInt(1, getNextSerialValue(conn, "dish_ingredient", "id"));
+                    ps.setInt(2, dishIngredient.getIngredient().getId());
+                    ps.setInt(3, dishIngredient.getDish().getId());
+                    ps.setDouble(4, dishIngredient.getQuantity());
+                    ps.setObject(5, dishIngredient.getUnit());
                     ps.addBatch(); // Can be substitute ps.executeUpdate() but bad performance
                 }
                 ps.executeBatch();
@@ -471,6 +455,63 @@
         } catch (Exception e) {
             throw new RuntimeException("Erreur technique lors du saveOrder", e);
         }
+        }
+
+        public StockValue getStockValueAt(Instant t, Integer ingredientId) {
+            if (ingredientId == null || t == null) {
+                throw new IllegalArgumentException("Ingredient ID and date must not be null");
+            }
+
+            String sql = """
+        SELECT quantity, type, unit
+        FROM stock_movement
+        WHERE id_ingredient = ?
+          AND creation_datetime <= ?
+    """;
+
+            try (Connection conn = new DBConnection().getConnection();
+                 PreparedStatement ps = conn.prepareStatement(sql)) {
+
+                ps.setInt(1, ingredientId);
+                ps.setTimestamp(2, Timestamp.from(t));
+
+                try (ResultSet rs = ps.executeQuery()) {
+
+                    double totalIn = 0;
+                    double totalOut = 0;
+                    UnitEnum unit = null;
+
+                    while (rs.next()) {
+                        double quantity = rs.getDouble("quantity");
+                        String typeStr = rs.getString("type");
+                        String unitStr = rs.getString("unit");
+
+                        if (unitStr != null) {
+                            UnitEnum currentUnit = UnitEnum.valueOf(unitStr);
+                            if (unit == null) {
+                                unit = currentUnit;
+                            } else if (!unit.equals(currentUnit)) {
+                                throw new RuntimeException("Multiple units found for ingredient " + ingredientId);
+                            }
+                        }
+
+                        if ("IN".equals(typeStr)) {
+                            totalIn += quantity;
+                        } else if ("OUT".equals(typeStr)) {
+                            totalOut += quantity;
+                        }
+                    }
+
+                    if (unit == null) {
+                        unit = UnitEnum.KG; // fallback si aucun mouvement
+                    }
+
+                    return new StockValue(totalIn - totalOut, unit);
+                }
+
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         private void insertIngredientStockMovements(Connection conn, Ingredient ingredient) {

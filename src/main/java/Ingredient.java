@@ -1,8 +1,10 @@
+import java.sql.*;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
 
 public class Ingredient {
 
@@ -100,6 +102,48 @@ public class Ingredient {
                 '}';
     }
 
+    /* public StockValue getStockValueAt(Instant t) {
+        if (this.id == null) {
+            throw new RuntimeException("Ingredient id is null");
+        }
+
+        String sql = """
+        SELECT
+        SUM(CASE WHEN type = 'IN' THEN quantity ELSE 0 END) AS total_in,
+        SUM(CASE WHEN type = 'OUT' THEN quantity ELSE 0 END) AS total_out,
+        MIN(unit) AS unit
+         FROM stock_movement
+         WHERE id_ingredient = ? AND creation_datetime <= ?                                
+    """;
+
+        try (Connection conn = new DBConnection().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, this.id);
+            ps.setTimestamp(2, Timestamp.from(t));
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    double totalIn = rs.getDouble("total_in");
+                    double totalOut = rs.getDouble("total_out");
+                    String unitStr = rs.getString("unit");
+
+                    UnitEnum unit = (unitStr != null) ? UnitEnum.valueOf(unitStr) : UnitEnum.KG;
+
+                    return new StockValue(totalIn - totalOut, unit);
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        // pas de mouvement → stock = 0
+        return new StockValue(0.0, UnitEnum.KG);
+    }
+
+ */
+    
     public StockValue getStockValueAt(Instant t) {
         if (stockMovementList == null || stockMovementList.isEmpty()) return null;
 
@@ -135,4 +179,5 @@ public class Ingredient {
 
         return stockValue;
     }
+
 }

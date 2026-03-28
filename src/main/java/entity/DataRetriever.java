@@ -1,12 +1,13 @@
-    import java.sql.*;
+package entity;
+
+import java.sql.*;
     import java.time.Instant;
     import java.util.ArrayList;
     import java.util.List;
     import java.util.Map;
     import java.util.stream.Collectors;
-    import java.util.stream.DoubleStream;
 
-    public class DataRetriever {
+public class DataRetriever {
         Dish findDishById(Integer id) {
             DBConnection dbConnection = new DBConnection();
             Connection connection = dbConnection.getConnection();
@@ -29,7 +30,7 @@
                     return dish;
                 }
                 dbConnection.closeConnection(connection);
-                throw new RuntimeException("Dish not found " + id);
+                throw new RuntimeException("entity.Dish not found " + id);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -283,7 +284,7 @@
                     order.setStatus(OrderStatusEnum.valueOf(resultSet.getString("status")));
                     return order;
                 }
-                throw new RuntimeException("Order not found with reference " + reference);
+                throw new RuntimeException("entity.Order not found with reference " + reference);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -459,7 +460,7 @@
 
         public StockValue getStockValueAt(Instant t, Integer ingredientId) {
             if (ingredientId == null || t == null) {
-                throw new IllegalArgumentException("Ingredient ID and date must not be null");
+                throw new IllegalArgumentException("entity.Ingredient ID and date must not be null");
             }
 
             String sql = """

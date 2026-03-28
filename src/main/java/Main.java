@@ -1,69 +1,71 @@
-import java.sql.Connection;
-import java.sql.DriverManager;
+import entity.*;
+import entity.enums.CategoryEnum;
+import entity.enums.MovementTypeEnum;
+import entity.enums.OrderTypeEnum;
+import entity.enums.UnitEnum;
+
 import java.sql.SQLException;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws SQLException {
         // Log before changes
-        /* DataRetriever dataRetriever = new DataRetriever();
-        Dish dish = dataRetriever.findDishById(2);
+        /* entity.DataRetriever dataRetriever = new entity.DataRetriever();
+        entity.Dish dish = dataRetriever.findDishById(2);
 
-        Ingredient carottes = new Ingredient(8, "Carotte", CategoryEnum.VEGETABLE, 100.0 );
-        Ingredient haricots = new Ingredient(7, "Haricots", CategoryEnum.VEGETABLE, 300.0);
-        Ingredient oignons = new Ingredient(6, "Oignons", CategoryEnum.VEGETABLE, 400.0);
-        Ingredient poivre = new Ingredient(9, "Poivre", CategoryEnum.VEGETABLE, 500.0);
-        Ingredient pommeDeTerre = new Ingredient(10, "PommeDeTerre", CategoryEnum.VEGETABLE, 600.0);
-        Ingredient farine = new Ingredient(11, "Farine", CategoryEnum.OTHER, 1000.0);
-        Ingredient lait = new Ingredient(12, "Lait", CategoryEnum.OTHER, 1000.0);
+        entity.Ingredient carottes = new entity.Ingredient(8, "Carotte", entity.enums.CategoryEnum.VEGETABLE, 100.0 );
+        entity.Ingredient haricots = new entity.Ingredient(7, "Haricots", entity.enums.CategoryEnum.VEGETABLE, 300.0);
+        entity.Ingredient oignons = new entity.Ingredient(6, "Oignons", entity.enums.CategoryEnum.VEGETABLE, 400.0);
+        entity.Ingredient poivre = new entity.Ingredient(9, "Poivre", entity.enums.CategoryEnum.VEGETABLE, 500.0);
+        entity.Ingredient pommeDeTerre = new entity.Ingredient(10, "PommeDeTerre", entity.enums.CategoryEnum.VEGETABLE, 600.0);
+        entity.Ingredient farine = new entity.Ingredient(11, "Farine", entity.enums.CategoryEnum.OTHER, 1000.0);
+        entity.Ingredient lait = new entity.Ingredient(12, "Lait", entity.enums.CategoryEnum.OTHER, 1000.0);
 
-        List<StockMovement> listStockMovementList = new ArrayList<>();
-        StockValue stockValue1 = new StockValue(1.0, UnitEnum.L);
-        StockMovement stockMovement1 = new StockMovement(11, stockValue1, MovementTypeEnum.OUT, Instant.parse("2026-01-26T15:42:18Z"));
+        List<entity.StockMovement> listStockMovementList = new ArrayList<>();
+        entity.StockValue stockValue1 = new entity.StockValue(1.0, entity.enums.UnitEnum.L);
+        entity.StockMovement stockMovement1 = new entity.StockMovement(11, stockValue1, entity.enums.MovementTypeEnum.OUT, Instant.parse("2026-01-26T15:42:18Z"));
 
-        Ingredient sel =  new Ingredient(13, "Sel", CategoryEnum.OTHER, 1000.0, List.of(stockMovement1));
+        entity.Ingredient sel =  new entity.Ingredient(13, "Sel", entity.enums.CategoryEnum.OTHER, 1000.0, List.of(stockMovement1));
 
         // System.out.println(dataRetriever.findDishById(2));
 
         // Log after changes
-        Ingredient savedHaricot = dataRetriever.saveIngredient(haricots);
-        Ingredient savedOignons = dataRetriever.saveIngredient(oignons);
-        Ingredient savedPommeDeTerre = dataRetriever.saveIngredient(pommeDeTerre);
-        Ingredient savedFarine = dataRetriever.saveIngredient(farine);
-        Ingredient savedLait = dataRetriever.saveIngredient(lait);
+        entity.Ingredient savedHaricot = dataRetriever.saveIngredient(haricots);
+        entity.Ingredient savedOignons = dataRetriever.saveIngredient(oignons);
+        entity.Ingredient savedPommeDeTerre = dataRetriever.saveIngredient(pommeDeTerre);
+        entity.Ingredient savedFarine = dataRetriever.saveIngredient(farine);
+        entity.Ingredient savedLait = dataRetriever.saveIngredient(lait);
 
-        Ingredient savedSalt = dataRetriever.saveIngredient(sel);
+        entity.Ingredient savedSalt = dataRetriever.saveIngredient(sel);
         // System.out.println(dataRetriever.saveIngredient(sel));
 
         dish.setIngredients(List.of(savedOignons, savedPommeDeTerre, savedFarine, savedLait, savedSalt));
 
-      Dish newDish = dataRetriever.saveDish(dish);
+      entity.Dish newDish = dataRetriever.saveDish(dish);
       // System.out.println(newDish);
       // System.out.println(dataRetriever.findDishById(1));
 
        // System.out.println(dataRetriever.saveIngredient(haricots));
 
-        // Ingredient creations
-        //List<Ingredient> createdIngredients = dataRetriever.createIngredients(List.of(new Ingredient(null, "Fromage", CategoryEnum.DAIRY, 1200.0)));
+        // entity.Ingredient creations
+        //List<entity.Ingredient> createdIngredients = dataRetriever.createIngredients(List.of(new entity.Ingredient(null, "Fromage", entity.enums.CategoryEnum.DAIRY, 1200.0)));
         //System.out.println(createdIngredients);
 
-        DataRetriever dr = new DataRetriever();
+        entity.DataRetriever dr = new entity.DataRetriever();
 
         // Test : method saveOrder()
-        Dish dish2 = dr.findDishById(6);
+        entity.Dish dish2 = dr.findDishById(6);
 
-        DishOrder dishOrder = new DishOrder();
+        entity.DishOrder dishOrder = new entity.DishOrder();
         dishOrder.setDish(dish2);
         dishOrder.setQuantity(1);
 
-        Order order = new Order();
+        entity.Order order = new entity.Order();
         order.setReference("ORD0002");
         order.setCreationDateTime(Instant.now());
         order.setDishOrders(List.of(dishOrder));
-        Order saved = dr.saveOrder(order);
+        entity.Order saved = dr.saveOrder(order);
         System.out.println("Commande enregistrée avec ID = " + saved.getId());
 
 */

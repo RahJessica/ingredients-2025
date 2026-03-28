@@ -1,3 +1,5 @@
+package entity;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -73,7 +75,7 @@ public class Dish {
 
     @Override
     public String toString() {
-        return "Dish{" +
+        return "entity.Dish{" +
                 "id=" + id +
                 ", price=" + price +
                 ", name='" + name + '\'' +

@@ -1,3 +1,5 @@
+package entity;
+
 import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
@@ -92,7 +94,7 @@ public class Order {
 
     @Override
     public String toString() {
-        return "Order{" +
+        return "entity.Order{" +
                 "id=" + id +
                 ", reference='" + reference + '\'' +
                 ", creationDateTime=" + creationDateTime +

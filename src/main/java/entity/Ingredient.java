@@ -1,4 +1,5 @@
-import java.sql.*;
+package entity;
+
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
@@ -93,7 +94,7 @@ public class Ingredient {
 
     @Override
     public String toString() {
-        return "Ingredient{" +
+        return "entity.Ingredient{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", category=" + category +
@@ -102,9 +103,9 @@ public class Ingredient {
                 '}';
     }
 
-    /* public StockValue getStockValueAt(Instant t) {
+    /* public entity.StockValue getStockValueAt(Instant t) {
         if (this.id == null) {
-            throw new RuntimeException("Ingredient id is null");
+            throw new RuntimeException("entity.Ingredient id is null");
         }
 
         String sql = """
@@ -128,9 +129,9 @@ public class Ingredient {
                     double totalOut = rs.getDouble("total_out");
                     String unitStr = rs.getString("unit");
 
-                    UnitEnum unit = (unitStr != null) ? UnitEnum.valueOf(unitStr) : UnitEnum.KG;
+                    entity.enums.UnitEnum unit = (unitStr != null) ? entity.enums.UnitEnum.valueOf(unitStr) : entity.enums.UnitEnum.KG;
 
-                    return new StockValue(totalIn - totalOut, unit);
+                    return new entity.StockValue(totalIn - totalOut, unit);
                 }
             }
 
@@ -139,7 +140,7 @@ public class Ingredient {
         }
 
         // pas de mouvement → stock = 0
-        return new StockValue(0.0, UnitEnum.KG);
+        return new entity.StockValue(0.0, entity.enums.UnitEnum.KG);
     }
 
  */

@@ -1,3 +1,5 @@
+package entity;
+
 public class DishIngredient {
     private Dish dish;
     private Ingredient ingredient;
@@ -38,7 +40,7 @@ public class DishIngredient {
 
     @Override
     public String toString() {
-        return "DishIngredient{" +
+        return "entity.DishIngredient{" +
                 "ingredient=" + ingredient +
                 ", quantity=" + quantity +
                 ", unit=" + unit +

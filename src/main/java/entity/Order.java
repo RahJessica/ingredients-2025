@@ -4,6 +4,9 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 
+import entity.enums.OrderStatusEnum;
+import entity.enums.OrderTypeEnum;
+
 public class Order {
     private Integer id;
     private String reference;

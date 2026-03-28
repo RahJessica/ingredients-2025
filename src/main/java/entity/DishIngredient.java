@@ -1,5 +1,7 @@
 package entity;
 
+import entity.enums.UnitEnum;
+
 public class DishIngredient {
     private Dish dish;
     private Ingredient ingredient;

@@ -8,7 +8,7 @@ import java.sql.*;
     import java.util.stream.Collectors;
 
 public class DataRetriever {
-        Dish findDishById(Integer id) {
+        public Dish findDishById(Integer id) {
             DBConnection dbConnection = new DBConnection();
             Connection connection = dbConnection.getConnection();
             try {
@@ -266,7 +266,7 @@ public class DataRetriever {
             }
         }
 
-        Order findOrderByReference(String reference) {
+        public Order findOrderByReference(String reference) {
             DBConnection dbConnection = new DBConnection();
             try (Connection connection = dbConnection.getConnection()) {
                 PreparedStatement preparedStatement = connection.prepareStatement("""

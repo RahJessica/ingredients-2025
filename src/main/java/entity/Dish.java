@@ -2,6 +2,7 @@ package entity;
 
 import java.util.List;
 import java.util.Objects;
+import entity.enums.DishTypeEnum;
 
 public class Dish {
     private Integer id;

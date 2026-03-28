@@ -1,5 +1,7 @@
 package entity;
 
+import entity.enums.MovementTypeEnum;
+
 import java.time.Instant;
 import java.util.Objects;
 

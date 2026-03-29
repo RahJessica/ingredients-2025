@@ -1,6 +1,7 @@
 package entity;
 
 import java.util.Objects;
+import entity.enums.UnitEnum;
 
 public class StockValue {
     private double quantity;

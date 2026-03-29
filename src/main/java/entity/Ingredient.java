@@ -1,5 +1,9 @@
 package entity;
 
+import entity.enums.MovementTypeEnum;
+import entity.enums.UnitEnum;
+import entity.enums.CategoryEnum;
+
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;

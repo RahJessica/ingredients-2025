@@ -1,7 +1,9 @@
-package entity;
+package td5springingredientapp.entity;
+
+import td5springingredientapp.entity.enums.UnitEnum;
+import td5springingredientapp.entity.enums.UnitEnum;
 
 import java.util.Objects;
-import entity.enums.UnitEnum;
 
 public class StockValue {
     private double quantity;
@@ -46,7 +48,7 @@ public class StockValue {
 
     @Override
     public String toString() {
-        return "entity.StockValue{" +
+        return "td5SpringIngredientApp.repository.entity.StockValue{" +
                 "quantity=" + quantity +
                 ", unit=" + unit +
                 '}';

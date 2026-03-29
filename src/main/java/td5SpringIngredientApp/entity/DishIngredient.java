@@ -1,18 +1,18 @@
-package entity;
+package td5springingredientapp.entity;
 
-import entity.enums.UnitEnum;
+import td5springingredientapp.entity.enums.UnitEnum;
 
 public class DishIngredient {
-    private Dish dish;
-    private Ingredient ingredient;
+    private td5springingredientapp.entity.Dish dish;
+    private td5springingredientapp.entity.Ingredient ingredient;
     private Double quantity;
     private UnitEnum unit;
 
-    public Ingredient getIngredient() {
+    public td5springingredientapp.entity.Ingredient getIngredient() {
         return ingredient;
     }
 
-    public void setIngredient(Ingredient ingredient) {
+    public void setIngredient(td5springingredientapp.entity.Ingredient ingredient) {
         this.ingredient = ingredient;
     }
 
@@ -32,7 +32,7 @@ public class DishIngredient {
         this.unit = unit;
     }
 
-    public Dish getDish() {
+    public td5springingredientapp.entity.Dish getDish() {
         return dish;
     }
 
@@ -42,7 +42,7 @@ public class DishIngredient {
 
     @Override
     public String toString() {
-        return "entity.DishIngredient{" +
+        return "td5SpringIngredientApp.repository.entity.DishIngredient{" +
                 "ingredient=" + ingredient +
                 ", quantity=" + quantity +
                 ", unit=" + unit +

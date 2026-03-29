@@ -1,11 +1,11 @@
-package controller;
+package td5springingredientapp.controller;
 
-import entity.Dish;
-import entity.DishIngredient;
-import repository.DishRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import td5springingredientapp.entity.Dish;
+import td5springingredientapp.entity.DishIngredient;
+import td5springingredientapp.repository.DishRepository;
 
 import java.util.List;
 

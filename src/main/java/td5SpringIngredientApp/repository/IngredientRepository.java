@@ -1,12 +1,12 @@
-package repository;
+package td5springingredientapp.repository;
 
-import entity.DishIngredient;
-import entity.Ingredient;
-import entity.StockMovement;
-import entity.StockValue;
-import entity.enums.CategoryEnum;
-import entity.enums.MovementTypeEnum;
-import entity.enums.UnitEnum;
+import td5springingredientapp.entity.DishIngredient;
+import td5springingredientapp.entity.Ingredient;
+import td5springingredientapp.entity.StockMovement;
+import td5springingredientapp.entity.StockValue;
+import td5springingredientapp.entity.enums.CategoryEnum;
+import td5springingredientapp.entity.enums.MovementTypeEnum;
+import td5springingredientapp.entity.enums.UnitEnum;
 
 import javax.sql.DataSource;
 import java.sql.*;

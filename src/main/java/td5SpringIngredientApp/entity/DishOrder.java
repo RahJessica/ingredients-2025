@@ -1,13 +1,13 @@
-package entity;
+package td5springingredientapp.entity;
 
 import java.util.Objects;
 
 public class DishOrder {
     private Integer id;
-    private Dish dish;
+    private td5springingredientapp.entity.Dish dish;
     private Integer quantity;
 
-    public DishOrder(Integer id, Dish dish, Integer quantity) {
+    public DishOrder(Integer id, td5springingredientapp.entity.Dish dish, Integer quantity) {
         this.id = id;
         this.dish = dish;
         this.quantity = quantity;
@@ -25,11 +25,11 @@ public class DishOrder {
         this.id = id;
     }
 
-    public Dish getDish() {
+    public td5springingredientapp.entity.Dish getDish() {
         return dish;
     }
 
-    public void setDish(Dish dish) {
+    public void setDish(td5springingredientapp.entity.Dish dish) {
         this.dish = dish;
     }
 
@@ -55,7 +55,7 @@ public class DishOrder {
 
     @Override
     public String toString() {
-        return "entity.DishOrder{" +
+        return "td5SpringIngredientApp.repository.entity.DishOrder{" +
                 "id=" + id +
                 ", dish=" + dish +
                 ", quantity=" + quantity +

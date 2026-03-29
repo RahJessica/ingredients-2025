@@ -1,11 +1,11 @@
-package entity;
+package td5springingredientapp.entity;
+
+import td5springingredientapp.entity.enums.OrderStatusEnum;
+import td5springingredientapp.entity.enums.OrderTypeEnum;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
-
-import entity.enums.OrderStatusEnum;
-import entity.enums.OrderTypeEnum;
 
 public class Order {
     private Integer id;
@@ -97,7 +97,7 @@ public class Order {
 
     @Override
     public String toString() {
-        return "entity.Order{" +
+        return "td5SpringIngredientApp.repository.entity.Order{" +
                 "id=" + id +
                 ", reference='" + reference + '\'' +
                 ", creationDateTime=" + creationDateTime +

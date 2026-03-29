@@ -1,8 +1,8 @@
-package repository;
+package td5springingredientapp.repository;
 
-import entity.DishOrder;
-import entity.Order;
-import entity.enums.OrderStatusEnum;
+import td5springingredientapp.entity.DishOrder;
+import td5springingredientapp.entity.Order;
+import td5springingredientapp.entity.enums.OrderStatusEnum;
 
 import javax.sql.DataSource;
 import java.sql.*;

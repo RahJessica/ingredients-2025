@@ -1,15 +1,15 @@
-package entity;
+package td5springingredientapp.entity;
+
+import td5springingredientapp.entity.enums.DishTypeEnum;
 
 import java.util.List;
 import java.util.Objects;
-import entity.enums.DishTypeEnum;
-
 public class Dish {
     private Integer id;
     private Double price;
     private String name;
-    private DishTypeEnum dishType;
-    private List<DishIngredient> dishIngredients;
+    private td5springingredientapp.entity.enums.DishTypeEnum dishType;
+    private List<td5springingredientapp.entity.DishIngredient> dishIngredients;
 
     public Double getPrice() {
         return price;
@@ -22,7 +22,7 @@ public class Dish {
     public Dish() {
     }
 
-    public Dish(Integer id, Double price, String name, DishTypeEnum dishType, List<DishIngredient> dishIngredients) {
+    public Dish(Integer id, Double price, String name, td5springingredientapp.entity.enums.DishTypeEnum dishType, List<td5springingredientapp.entity.DishIngredient> dishIngredients) {
         this.id = id;
         this.price = price;
         this.name = name;
@@ -54,11 +54,11 @@ public class Dish {
         this.dishType = dishType;
     }
 
-    public List<DishIngredient> getDishIngredients() {
+    public List<td5springingredientapp.entity.DishIngredient> getDishIngredients() {
         return dishIngredients;
     }
 
-    public void setDishIngredients(List<DishIngredient> dishIngredients) {
+    public void setDishIngredients(List<td5springingredientapp.entity.DishIngredient> dishIngredients) {
         this.dishIngredients = dishIngredients;
     }
 
@@ -76,7 +76,7 @@ public class Dish {
 
     @Override
     public String toString() {
-        return "entity.Dish{" +
+        return "td5SpringIngredientApp.repository.entity.Dish{" +
                 "id=" + id +
                 ", price=" + price +
                 ", name='" + name + '\'' +
@@ -87,7 +87,7 @@ public class Dish {
 
     public Double getDishCost() {
         double totalPrice = 0;
-        for (DishIngredient dishIngredient : dishIngredients) {
+        for (td5springingredientapp.entity.DishIngredient dishIngredient : dishIngredients) {
             Double quantity = dishIngredient.getQuantity();
             if (quantity == null) {
                 throw new RuntimeException("Some ingredients have undefined quantity");

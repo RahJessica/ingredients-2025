@@ -1,6 +1,6 @@
-package entity;
+package td5springingredientapp.entity;
 
-import entity.enums.MovementTypeEnum;
+import td5springingredientapp.entity.enums.MovementTypeEnum;
 
 import java.time.Instant;
 import java.util.Objects;
@@ -68,7 +68,7 @@ public class StockMovement {
 
     @Override
     public String toString() {
-        return "entity.StockMovement{" +
+        return "td5SpringIngredientApp.repository.entity.StockMovement{" +
                 "id=" + id +
                 ", value=" + value +
                 ", type=" + type +

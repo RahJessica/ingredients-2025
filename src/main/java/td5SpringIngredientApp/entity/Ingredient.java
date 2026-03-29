@@ -1,8 +1,8 @@
-package entity;
+package td5springingredientapp.entity;
 
-import entity.enums.MovementTypeEnum;
-import entity.enums.UnitEnum;
-import entity.enums.CategoryEnum;
+import td5springingredientapp.entity.enums.CategoryEnum;
+import td5springingredientapp.entity.enums.MovementTypeEnum;
+import td5springingredientapp.entity.enums.UnitEnum;
 
 import java.time.Instant;
 import java.util.List;
@@ -98,7 +98,7 @@ public class Ingredient {
 
     @Override
     public String toString() {
-        return "entity.Ingredient{" +
+        return "td5SpringIngredientApp.repository.entity.Ingredient{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", category=" + category +
@@ -107,9 +107,9 @@ public class Ingredient {
                 '}';
     }
 
-    /* public entity.StockValue getStockValueAt(Instant t) {
+    /* public td5SpringIngredientApp.repository.entity.StockValue getStockValueAt(Instant t) {
         if (this.id == null) {
-            throw new RuntimeException("entity.Ingredient id is null");
+            throw new RuntimeException("td5SpringIngredientApp.repository.entity.Ingredient id is null");
         }
 
         String sql = """
@@ -133,9 +133,9 @@ public class Ingredient {
                     double totalOut = rs.getDouble("total_out");
                     String unitStr = rs.getString("unit");
 
-                    entity.enums.UnitEnum unit = (unitStr != null) ? entity.enums.UnitEnum.valueOf(unitStr) : entity.enums.UnitEnum.KG;
+                    td5SpringIngredientApp.repository.entity.enums.UnitEnum unit = (unitStr != null) ? td5SpringIngredientApp.repository.entity.enums.UnitEnum.valueOf(unitStr) : td5SpringIngredientApp.repository.entity.enums.UnitEnum.KG;
 
-                    return new entity.StockValue(totalIn - totalOut, unit);
+                    return new td5SpringIngredientApp.repository.entity.StockValue(totalIn - totalOut, unit);
                 }
             }
 
@@ -144,7 +144,7 @@ public class Ingredient {
         }
 
         // pas de mouvement → stock = 0
-        return new entity.StockValue(0.0, entity.enums.UnitEnum.KG);
+        return new td5SpringIngredientApp.repository.entity.StockValue(0.0, td5SpringIngredientApp.repository.entity.enums.UnitEnum.KG);
     }
 
  */

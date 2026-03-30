@@ -1,11 +1,15 @@
 package td5springingredientapp.repository;
 
+import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.RestController;
+
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@Repository
 public class SequenceRepository {
 
     private final DataSource dataSource;

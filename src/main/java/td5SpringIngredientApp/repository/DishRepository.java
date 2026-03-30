@@ -1,5 +1,6 @@
 package td5springingredientapp.repository;
 
+import org.springframework.stereotype.Repository;
 import td5springingredientapp.entity.Dish;
 import td5springingredientapp.entity.DishIngredient;
 import td5springingredientapp.entity.enums.DishTypeEnum;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Repository
 public class DishRepository {
 
     private final DataSource dataSource;
@@ -18,9 +20,38 @@ public class DishRepository {
         this.dataSource = dataSource;
     }
 
+    public List<Dish> findAllDishes() {
+        List<Dish> dishes = new java.util.ArrayList<>();
+
+        String sql = """
+        SELECT id, name, dish_type, price
+        FROM dish
+    """;
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Dish dish = new Dish();
+                dish.setId(rs.getInt("id"));
+                dish.setName(rs.getString("name"));
+                dish.setDishType(DishTypeEnum.valueOf(rs.getString("dish_type").toUpperCase()));
+                dish.setPrice(rs.getObject("price") == null ? null : rs.getDouble("price"));
+
+                dishes.add(dish);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return dishes;
+    }
+
     public Dish findDishById(Integer id) {
         String sql = """
-                select dish.id as dish_id, dish.name as dish_name, dish_type, dish.price as dish_price
+                select dish.id, dish.name, dish.dish_type, dish.price
                 from dish
                 where dish.id = ?;
                 """;
@@ -35,7 +66,7 @@ public class DishRepository {
                     dish.setId(rs.getInt("id"));
                     dish.setName(rs.getString("name"));
                     dish.setDishType(DishTypeEnum.valueOf(rs.getString("dish_type")));
-                    dish.setPrice(rs.getObject("selling_price") == null ? null : rs.getDouble("selling_price"));
+                    dish.setPrice(rs.getObject("price") == null ? null : rs.getDouble("price"));
                     return dish;
                 }
             }
@@ -49,8 +80,8 @@ public class DishRepository {
 
     public Dish save(Dish dish) {
         String upsertSql = """
-                INSERT INTO dish (id, selling_price, name, dish_type)
-                VALUES (?, ?, ?, ?::dish_type)
+                INSERT INTO dish (id, name, dish_type, price)
+                VALUES (?, ?, ?::dish_type, ?)
                 ON CONFLICT (id) DO UPDATE
                 SET name = EXCLUDED.name,
                     dish_type = EXCLUDED.dish_type,

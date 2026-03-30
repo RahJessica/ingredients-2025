@@ -21,7 +21,7 @@ public class DishController {
 
     @GetMapping
     public ResponseEntity<List<Dish>> getAllDishes() {
-        List<Dish> dishes = List.of();
+        List<Dish> dishes = dishRepository.findAllDishes();
         return ResponseEntity.ok(dishes);
     }
 

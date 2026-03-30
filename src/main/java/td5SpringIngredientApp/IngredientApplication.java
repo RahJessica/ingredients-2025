@@ -1,4 +1,4 @@
-package td5springingredient;
+package td5springingredientapp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

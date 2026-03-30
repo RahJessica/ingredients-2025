@@ -1,10 +1,10 @@
-package td5springingredientapp.repository.controller;
+package td5springingredientapp.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import td5springingredientapp.repository.IngredientRepository;
-import td5springingredientapp.repository.entity.Ingredient;
+import td5springingredientapp.entity.Ingredient;
 
 import java.util.List;
 

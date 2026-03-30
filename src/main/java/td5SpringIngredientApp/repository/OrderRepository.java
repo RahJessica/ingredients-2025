@@ -1,5 +1,7 @@
 package td5springingredientapp.repository;
 
+import jdk.jfr.Registered;
+import org.springframework.stereotype.Repository;
 import td5springingredientapp.entity.DishOrder;
 import td5springingredientapp.entity.Order;
 import td5springingredientapp.entity.enums.OrderStatusEnum;
@@ -9,6 +11,7 @@ import java.sql.*;
 import java.time.Instant;
 import java.util.List;
 
+@Repository
 public class OrderRepository {
     private final DataSource dataSource;
 

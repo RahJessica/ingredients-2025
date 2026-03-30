@@ -1,5 +1,6 @@
 package td5springingredientapp.repository;
 
+import org.springframework.stereotype.Repository;
 import td5springingredientapp.entity.DishIngredient;
 import td5springingredientapp.entity.Ingredient;
 import td5springingredientapp.entity.StockMovement;
@@ -13,6 +14,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class IngredientRepository {
 
     private final DataSource dataSource;

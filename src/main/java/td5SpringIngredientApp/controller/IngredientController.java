@@ -3,9 +3,11 @@ package td5springingredientapp.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import td5springingredientapp.entity.StockValue;
 import td5springingredientapp.repository.IngredientRepository;
 import td5springingredientapp.entity.Ingredient;
 
+import java.time.Instant;
 import java.util.List;
 
 @RestController
@@ -20,29 +22,38 @@ public class IngredientController {
 
     @GetMapping
     public ResponseEntity<List<Ingredient>> getAllIngredients() {
-        List<Ingredient> ingredients = ingredientRepository.findAllIngreidents();
+        List<Ingredient> ingredients = ingredientRepository.findAllIngredients();
         return ResponseEntity.ok(ingredients);
     }
 
     @GetMapping("/{id}/stock")
     public ResponseEntity<?> getIngredientStock(
             @PathVariable("id") Integer id,
-            @RequestParam(value = "at", required = false) String temporal,
-            @RequestParam(value = "unit", required = false) String unit) {
+            @RequestParam(value = "at") String temporal,
+            @RequestParam(value = "unit") String unit) {
 
-        if (temporal == null || unit == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Either mandatory query parameter at or unit is not provided");
-        }
-
-        List<Ingredient> ingredients = ingredientRepository.createIngredients(List.of()); // remplace par findById
-        Ingredient ingredient = ingredients.stream().filter(i -> i.getId().equals(id)).findFirst().orElse(null);
+        Ingredient ingredient = ingredientRepository.findById(id);
 
         if (ingredient == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Ingredient.id=" + id + " is not found");
         }
-        return ResponseEntity.ok(new StockResponse(ingredient.getId(), 100.0, unit));
+
+        Instant atInstant;
+        try {
+            atInstant = Instant.parse(temporal);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Invalid 'at' parameter. Use ISO-8601 format like 2026-03-30T15:00:00Z");
+        }
+
+        StockValue stockValue = ingredient.getStockValueAt(atInstant);
+
+        if (stockValue == null) {
+            return ResponseEntity.ok(new StockResponse(ingredient.getId(), 0.0, unit));
+        }
+
+        return ResponseEntity.ok(new StockResponse(ingredient.getId(), stockValue.getQuantity(), stockValue.getUnit().name()));
     }
 
     static class StockResponse {

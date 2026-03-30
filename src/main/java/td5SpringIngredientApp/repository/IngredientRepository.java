@@ -23,7 +23,7 @@ public class IngredientRepository {
         this.dataSource = dataSource;
     }
 
-    public List<Ingredient> findAllIngreidents() {
+    public List<Ingredient> findAllIngredients() {
         List<Ingredient> ingredients = new ArrayList<>();
         String sql = "SELECT id, name, price, category FROM ingredient";
 
@@ -36,7 +36,12 @@ public class IngredientRepository {
                 ingredient.setId(rs.getInt("id"));
                 ingredient.setName(rs.getString("name"));
                 ingredient.setPrice(rs.getDouble("price"));
-                ingredient.setCategory(CategoryEnum.valueOf(rs.getString("category")));
+                String cat = rs.getString("category");
+                ingredient.setCategory(cat != null ? CategoryEnum.valueOf(cat) : null);
+
+                List<StockMovement> movements = findStockMovementsByIngredientId(ingredient.getId());
+                ingredient.setStockMovementList(movements);
+
                 ingredients.add(ingredient);
             }
 
@@ -45,6 +50,37 @@ public class IngredientRepository {
         }
 
         return ingredients;
+    }
+
+    public Ingredient findById(Integer id) {
+        String sql = "SELECT id, name, price, category FROM ingredient WHERE id = ?";
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Ingredient ingredient = new Ingredient();
+                    ingredient.setId(rs.getInt("id"));
+                    ingredient.setName(rs.getString("name"));
+                    ingredient.setPrice(rs.getDouble("price"));
+                    String cat = rs.getString("category");
+                    ingredient.setCategory(cat != null ? CategoryEnum.valueOf(cat) : null);
+
+                    List<StockMovement> movements = findStockMovementsByIngredientId(ingredient.getId());
+                    ingredient.setStockMovementList(movements);
+
+                    return ingredient;
+                } else {
+                    return null;
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public List<Ingredient> createIngredients(List<Ingredient> newIngredients) {
@@ -314,5 +350,32 @@ public class IngredientRepository {
         Object requiredQuantity = rs.getObject("required_quantity");
 
         return ingredient;
+    }
+
+    public List<StockMovement> findStockMovementsByIngredientId(Integer ingredientId) {
+        List<StockMovement> movements = new ArrayList<>();
+        String sql = "SELECT id, type, quantity, unit, creation_datetime " +
+                "FROM stock_movement WHERE id_ingredient = ?";
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, ingredientId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    StockMovement sm = new StockMovement();
+                    sm.setId(rs.getInt("id"));
+                    sm.setType(MovementTypeEnum.valueOf(rs.getString("type")));
+                    StockValue value = new StockValue();
+                    value.setQuantity(rs.getDouble("quantity"));
+                    value.setUnit(UnitEnum.valueOf(rs.getString("unit")));
+                    sm.setValue(value);
+                    sm.setCreationDatetime(rs.getTimestamp("creation_datetime").toInstant());
+                    movements.add(sm);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return movements;
     }
 }

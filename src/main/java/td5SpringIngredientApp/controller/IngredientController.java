@@ -20,7 +20,7 @@ public class IngredientController {
 
     @GetMapping
     public ResponseEntity<List<Ingredient>> getAllIngredients() {
-        List<Ingredient> ingredients = ingredientRepository.createIngredients(List.of());
+        List<Ingredient> ingredients = ingredientRepository.findAllIngreidents();
         return ResponseEntity.ok(ingredients);
     }
 

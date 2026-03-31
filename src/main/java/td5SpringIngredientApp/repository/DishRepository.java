@@ -85,7 +85,7 @@ public class DishRepository {
                 ON CONFLICT (id) DO UPDATE
                 SET name = EXCLUDED.name,
                     dish_type = EXCLUDED.dish_type,
-                    selling_price = EXCLUDED.selling_price
+                    price = EXCLUDED.price
                 RETURNING id
                 """;
 
@@ -99,13 +99,14 @@ public class DishRepository {
                 } else {
                     ps.setNull(1, Types.INTEGER);
                 }
+                ps.setString(2, dish.getName());
+                ps.setString(3, dish.getDishType().name());
                 if (dish.getPrice() != null) {
-                    ps.setDouble(2, dish.getPrice());
-                } else {
-                    ps.setNull(2, Types.DOUBLE);
+                    ps.setDouble(4, dish.getPrice());
                 }
-                ps.setString(3, dish.getName());
-                ps.setString(4, dish.getDishType().name());
+                else {
+                    ps.setNull(4, Types.DOUBLE);
+                }
 
                 try (ResultSet rs = ps.executeQuery()) {
                     rs.next();
@@ -128,8 +129,8 @@ public class DishRepository {
         if (ingredients == null || ingredients.isEmpty()) return;
 
         String attachSql = """
-                INSERT INTO dish_ingredient (id, id_ingredient, id_dish, required_quantity, unit)
-                VALUES (?, ?, ?, ?, ?::unit)
+                INSERT INTO dish_ingredient (id, id_ingredient, id_dish, quantity_required, unit)
+                VALUES (?, ?, ?, ?, ?::unit_type)
                 """;
 
         try (PreparedStatement ps = conn.prepareStatement(attachSql)) {

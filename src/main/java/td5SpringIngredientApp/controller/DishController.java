@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import td5springingredientapp.entity.Dish;
 import td5springingredientapp.entity.DishIngredient;
+import td5springingredientapp.entity.Ingredient;
 import td5springingredientapp.repository.DishRepository;
 
 import java.util.List;
@@ -35,20 +36,23 @@ public class DishController {
                     .body("Request body is mandatory");
         }
 
+        Dish dish;
         try {
-            Dish dish = dishRepository.findDishById(id);
-            if (dish == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("Dish.id=" + id + " is not found");
-            }
-
-            dish.setDishIngredients(ingredients);
-            Dish updatedDish = dishRepository.save(dish);
-            return ResponseEntity.ok(updatedDish);
-
+            dish = dishRepository.findDishById(id);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Dish.id=" + id + " is not found");
         }
+
+        for (DishIngredient di : ingredients) {
+            di.setDish(dish);
+            if (di.getIngredient() != null) {
+                di.setIngredient(new Ingredient(di.getIngredient().getId()));
+            }
+        }
+
+        dish.setDishIngredients(ingredients);
+        Dish updatedDish = dishRepository.save(dish);
+        return ResponseEntity.ok(updatedDish);
     }
 }

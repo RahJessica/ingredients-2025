@@ -21,8 +21,19 @@ public class DishController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Dish>> getAllDishes() {
-        List<Dish> dishes = dishRepository.findAllDishes();
+    public ResponseEntity<List<Dish>> getAllDishes(
+            @RequestParam(required = false) Double priceUnder,
+            @RequestParam(required = false) Double priceOver,
+            @RequestParam(required = false) String name) {
+
+        List<Dish> dishes;
+
+        if (priceUnder == null && priceOver == null && (name == null || name.isEmpty())) {
+            dishes = dishRepository.findAllDishes();
+        } else {
+            dishes = dishRepository.findDishesFiltered(priceUnder, priceOver, name);
+        }
+
         return ResponseEntity.ok(dishes);
     }
 

@@ -80,14 +80,14 @@ public class DishRepository {
 
     public Dish save(Dish dish) {
         String upsertSql = """
-                INSERT INTO dish (id, name, dish_type, price)
-                VALUES (?, ?, ?::dish_type, ?)
-                ON CONFLICT (id) DO UPDATE
-                SET name = EXCLUDED.name,
-                    dish_type = EXCLUDED.dish_type,
-                    price = EXCLUDED.price
-                RETURNING id
-                """;
+    INSERT INTO dish (name, dish_type, price)
+    VALUES (?, ?::dish_type, ?)
+    ON CONFLICT (id) DO UPDATE
+    SET name = EXCLUDED.name,
+        dish_type = EXCLUDED.dish_type,
+        price = EXCLUDED.price
+    RETURNING id
+    """;
 
         try (Connection conn = dataSource.getConnection()) {
             conn.setAutoCommit(false);
@@ -128,10 +128,10 @@ public class DishRepository {
     public List<Dish> createDishes(List<Dish> dishes) {
         String checkNameSql = "SELECT COUNT(dish.id) FROM dish WHERE name = ?";
         String insertSql = """
-            INSERT INTO dish (id, name, dish_type, price)
-            VALUES (?, ?, ?::dish_type, ?)
-            RETURNING id
-            """;
+        INSERT INTO dish (name, dish_type, price)
+        VALUES (?, ?::dish_type, ?)
+        RETURNING id
+        """;
 
         try (Connection conn = dataSource.getConnection()) {
             conn.setAutoCommit(false);
@@ -149,13 +149,12 @@ public class DishRepository {
                 }
 
                 try (PreparedStatement insertPs = conn.prepareStatement(insertSql)) {
-                    insertPs.setInt(1, getNextSerialValue(conn, "dish", "id"));
-                    insertPs.setString(2, dish.getName());
-                    insertPs.setString(3, dish.getDishType().name());
+                    insertPs.setString(1, dish.getName());
+                    insertPs.setString(2, dish.getDishType().name());
                     if (dish.getPrice() != null) {
-                        insertPs.setDouble(4, dish.getPrice());
+                        insertPs.setDouble(3, dish.getPrice());
                     } else {
-                        insertPs.setNull(4, Types.DOUBLE);
+                        insertPs.setNull(3, Types.DOUBLE);
                     }
 
                     try (ResultSet rs = insertPs.executeQuery()) {

@@ -55,4 +55,25 @@ public class DishController {
         Dish updatedDish = dishRepository.save(dish);
         return ResponseEntity.ok(updatedDish);
     }
+
+    @PostMapping
+    public ResponseEntity<?> createDishes(@RequestBody List<Dish> newDishes) {
+        if (newDishes == null || newDishes.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Request body must contain at least one dish");
+        }
+
+        try {
+            List<Dish> createdDishes = dishRepository.createDishes(newDishes);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdDishes);
+
+        } catch (RuntimeException e) {
+            String msg = e.getMessage();
+            if (msg != null && msg.startsWith("Dish.name=")) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(msg);
+            }
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Internal error: " + e.getMessage());
+        }
+    }
 }

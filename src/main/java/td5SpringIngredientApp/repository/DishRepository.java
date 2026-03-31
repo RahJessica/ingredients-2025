@@ -125,6 +125,56 @@ public class DishRepository {
         }
     }
 
+    public List<Dish> createDishes(List<Dish> dishes) {
+        String checkNameSql = "SELECT COUNT(dish.id) FROM dish WHERE name = ?";
+        String insertSql = """
+            INSERT INTO dish (id, name, dish_type, price)
+            VALUES (?, ?, ?::dish_type, ?)
+            RETURNING id
+            """;
+
+        try (Connection conn = dataSource.getConnection()) {
+            conn.setAutoCommit(false);
+            List<Dish> createdDishes = new java.util.ArrayList<>();
+
+            for (Dish dish : dishes) {
+                try (PreparedStatement checkPs = conn.prepareStatement(checkNameSql)) {
+                    checkPs.setString(1, dish.getName());
+                    try (ResultSet rs = checkPs.executeQuery()) {
+                        rs.next();
+                        if (rs.getInt(1) > 0) {
+                            throw new RuntimeException("Dish.name=" + dish.getName() + " already exists");
+                        }
+                    }
+                }
+
+                try (PreparedStatement insertPs = conn.prepareStatement(insertSql)) {
+                    insertPs.setInt(1, getNextSerialValue(conn, "dish", "id"));
+                    insertPs.setString(2, dish.getName());
+                    insertPs.setString(3, dish.getDishType().name());
+                    if (dish.getPrice() != null) {
+                        insertPs.setDouble(4, dish.getPrice());
+                    } else {
+                        insertPs.setNull(4, Types.DOUBLE);
+                    }
+
+                    try (ResultSet rs = insertPs.executeQuery()) {
+                        rs.next();
+                        int generatedId = rs.getInt(1);
+                        dish.setId(generatedId);
+                        createdDishes.add(dish);
+                    }
+                }
+            }
+
+            conn.commit();
+            return createdDishes;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private void attachIngredients(Connection conn, List<DishIngredient> ingredients) throws SQLException {
         if (ingredients == null || ingredients.isEmpty()) return;
 

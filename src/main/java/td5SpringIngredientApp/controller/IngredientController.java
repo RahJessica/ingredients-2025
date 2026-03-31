@@ -26,6 +26,19 @@ public class IngredientController {
         return ResponseEntity.ok(ingredients);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getIngredientById(@PathVariable("id") Integer id) {
+
+        Ingredient ingredient = ingredientRepository.findById(id);
+
+        if (ingredient == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Ingredient.id=" + id + " is not found");
+        }
+
+        return ResponseEntity.ok(ingredient);
+    }
+
     @GetMapping("/{id}/stock")
     public ResponseEntity<?> getIngredientStock(
             @PathVariable("id") Integer id,
